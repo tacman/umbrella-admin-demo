@@ -3,6 +3,9 @@ framework:
     secret: '%env(APP_SECRET)%'
     http_method_override: true
 
+    messenger:
+        reset_on_message: true
+
     session:
         handler_id: null
         cookie_secure: auto
