@@ -18,7 +18,7 @@
         "doctrine/orm": "2.9",
         "knplabs/knp-time-bundle": "^1.16",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "stof/doctrine-extensions-bundle": "^1.4",
+        "stof/doctrine-extensions-bundle": "dev-main",
         "symfony/asset": ">= 5.3",
         "symfony/config": ">= 5.3",
         "symfony/console": ">= 5.3",
