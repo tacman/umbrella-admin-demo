@@ -2,31 +2,32 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Umbrella\CoreBundle\Model\IdTrait;
-use Umbrella\CoreBundle\Model\OrderTrait;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class FormMockItem
 {
     use IdTrait;
-    use OrderTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FormMock", inversedBy="items")
-     * @ORM\JoinColumn(name="form_fields_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    public ?FormMock $formFields = null;
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 0])]
+    public int $position = 0;
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: FormMock::class, inversedBy: 'collectionItems')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    public ?FormMock $collectionParent = null;
+
+    #[ORM\ManyToOne(targetEntity: FormMock::class, inversedBy: 'collectionOrderableItems')]
+    #[ORM\JoinColumn(name: 'parent_orderable_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    public ?FormMock $collectionOrderableParent = null;
+
+    #[ORM\Column(type: Types::STRING)]
     public ?string $label = null;
 
     /**
-     * @ORM\Column(type="text", nullable=false)
+     * @var \DateTime|null
      */
-    public ?string $description = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    public ?\DateTimeInterface $date = null;
 }

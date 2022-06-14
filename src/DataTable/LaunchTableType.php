@@ -2,13 +2,13 @@
 
 namespace App\DataTable;
 
-use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use function Symfony\Component\String\u;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Umbrella\CoreBundle\DataTable\Adapter\AdapterException;
+use Umbrella\CoreBundle\DataTable\AdapterException;
 use Umbrella\CoreBundle\DataTable\Column\BooleanColumnType;
-use Umbrella\CoreBundle\DataTable\Column\DetailsHandleColumnType;
+use Umbrella\CoreBundle\DataTable\Column\DetailsColumnType;
 use Umbrella\CoreBundle\DataTable\Column\PropertyColumnType;
 use Umbrella\CoreBundle\DataTable\DataTableBuilder;
 use Umbrella\CoreBundle\DataTable\DataTableType;
@@ -20,60 +20,50 @@ use Umbrella\CoreBundle\DataTable\DTO\DataTableState;
  */
 class LaunchTableType extends DataTableType
 {
-    private HttpClientInterface $client;
-
     /**
      * ApiTableType constructor.
      */
-    public function __construct(HttpClientInterface $client)
+    public function __construct(private HttpClientInterface $client)
     {
-        $this->client = $client;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildTable(DataTableBuilder $builder, array $options = [])
     {
-        $builder->setRowClass(function ($o) {
-            return $o->success ? '' : 'table-danger';
-        });
+        // Define a row class depending of data
+        $builder->setRowClass(fn ($o) => $o->success ? '' : 'row-border-danger');
 
-        $builder->add('details_handle', DetailsHandleColumnType::class, [
-            'render_details' => function ($o) {
-                if (!$o->details && !$o->failures) {
-                    return '';
+        $builder
+            ->add('__more__', DetailsColumnType::class, [
+                'render_details' => function ($o) {
+                    if (!$o->details && !$o->failures) {
+                        return '';
+                    }
+
+                    $h = '<dl class="row mb-0">';
+
+                    $h .= '<dt class="col-2">Details</dt>';
+                    $h .= sprintf('<dd class="col-10">%s</dd>', $o->details);
+
+                    if ($o->failures) {
+                        $h .= '<dt class="col-2">Failure</dt>';
+                        $h .= sprintf('<dd class="col-10">%s</dd>', $o->failures[0]->reason);
+                    }
+
+                    $h .= '</dl>';
+                    return $h;
                 }
-
-                $h = '<dl class="row mb-0">';
-
-                $h .= '<dt class="col-2">Details</dt>';
-                $h .= sprintf('<dd class="col-10">%s</dd>', $o->details);
-
-                if ($o->failures) {
-                    $h .= '<dt class="col-2">Failure</dt>';
-                    $h .= sprintf('<dd class="col-10">%s</dd>', $o->failures[0]->reason);
-                }
-
-                $h .= '</dl>';
-                return $h;
-            }
-        ]);
-
-        $builder->add('date_utc', PropertyColumnType::class, [
-            'render' => function ($o) {
-                return (new \DateTime($o->date_utc))->format('d M Y H:i');
-            }
-        ]);
-        $builder->add('name', PropertyColumnType::class);
-        $builder->add('success', BooleanColumnType::class);
-        $builder->add('details', PropertyColumnType::class, [
-            'render' => function ($o) {
-                return u($o->details)->truncate(100, '...');
-            }
-        ]);
+            ])
+            ->add('date_utc', PropertyColumnType::class, [
+                'render' => fn ($o) => (new \DateTime($o->date_utc))->format('d M Y H:i')
+            ])
+            ->add('name', PropertyColumnType::class)
+            ->add('success', BooleanColumnType::class)
+            ->add('details', PropertyColumnType::class, [
+                'render' => fn ($o) => u($o->details)->truncate(100, '...')
+            ]);
 
         $builder->useAdapter(function (DataTableState $state) {
+            // Retrieve result from SpaceX API
             try {
                 $response = $this->client->request('POST', 'https://api.spacexdata.com/v4/launches/query', [
                     'timeout' => 3,
@@ -88,7 +78,7 @@ class LaunchTableType extends DataTableType
                 $json = json_decode($response->getContent());
 
                 return new DataTableResult($json->docs, $json->totalDocs);
-            } catch (TransportException $e) {
+            } catch (ExceptionInterface $e) {
                 throw new AdapterException($e->getMessage());
             }
         });
@@ -97,8 +87,7 @@ class LaunchTableType extends DataTableType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'orderable' => false,
-            'class' => 'table dt-responsive w-100'
+            'orderable' => false // Disable ordering on table
         ]);
     }
 }

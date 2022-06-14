@@ -6,7 +6,7 @@ ARG UID=1000
 ARG GID=1000
 ARG WORKDIR=/app
 
-ENV NODE_VERSION=15.8.0
+ENV NODE_VERSION=16.0.0
 ENV NVM_DIR /usr/local/nvm
 
 # Docker user
@@ -23,6 +23,10 @@ RUN chown -R ${USER}:${USER} ${WORKDIR}
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
 
+# dev tools (git / zip)
+RUN apt-get -y update
+RUN apt-get -y install git p7zip-full
+
 # node / yarn
 RUN mkdir -p $NVM_DIR
 RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
@@ -38,6 +42,9 @@ RUN npm install --global yarn
 
 # php extension
 RUN docker-php-ext-install pdo pdo_mysql
+RUN apt-get install -y libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
 
 # Clear packages artifcat
 RUN apt-get clean && apt-get --yes --quiet autoremove --purge && \

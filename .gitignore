@@ -1,9 +1,7 @@
-###> Tools / Other ###
+###> project ###
 /.idea/*
-*.DS_Store
-bin/deploy
-bin/link_vendor
 composer.lock
+###< project ###
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -11,14 +9,23 @@ composer.lock
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/var/*
-!/var/.gitkeep
+/var/
 /vendor/
+###< symfony/framework-bundle ###
 
-###> symfony/phpunit-bridge ###
-.phpunit
-.phpunit.result.cache
+###> vich/uploader-bundle ###
+/public/uploads/
+###< vich/uploader-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> phpunit/phpunit ###
 /phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
@@ -26,15 +33,4 @@ composer.lock
 /public/ckeditor4/
 npm-debug.log
 yarn-error.log
-
-###> Vich Uploader ###
-/public/uploads/*
-!/public/uploads/.gitkeep
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-
-###> friendsofphp/php-cs-fixer ###
-/.php-cs-fixer.php
-/.php-cs-fixer.cache
+###< symfony/webpack-encore-bundle ###

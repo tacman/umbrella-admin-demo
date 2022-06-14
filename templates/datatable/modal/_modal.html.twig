@@ -1,0 +1,16 @@
+{% extends "@UmbrellaCore/Modal/default.html.twig" %}
+
+{% block modal_class %}modal-xl{% endblock %}
+
+{% block modal_title %}
+    <h4 class="modal-title">Missions</h4>
+{% endblock %}
+
+{% block modal_body %}
+    <div class="modal-datatable">
+        {{ render_table(table) }}
+    </div>
+{% endblock %}
+
+{% block modal_footer %}
+{% endblock %}

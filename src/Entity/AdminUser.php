@@ -7,12 +7,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Umbrella\AdminBundle\Entity\BaseAdminUser;
 use Umbrella\CoreBundle\Search\Annotation\Searchable;
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @Searchable
- * @UniqueEntity("email")
- */
+#[ORM\Entity]
+#[UniqueEntity('email')]
+#[Searchable]
 class AdminUser extends BaseAdminUser
 {
     /**

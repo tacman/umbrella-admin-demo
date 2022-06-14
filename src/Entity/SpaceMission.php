@@ -2,93 +2,48 @@
 
 namespace App\Entity;
 
+use App\Enum\MissionStatus;
+use App\Enum\RocketStatus;
 use App\Repository\SpaceMissionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Umbrella\CoreBundle\Model\IdTrait;
 use Umbrella\CoreBundle\Model\SearchTrait;
 use Umbrella\CoreBundle\Search\Annotation\Searchable;
 use Umbrella\CoreBundle\Search\Annotation\SearchableField;
 
-/**
- * @ORM\Entity(repositoryClass=SpaceMissionRepository::class)
- * @Searchable
- */
-class SpaceMission
+#[ORM\Entity(repositoryClass: SpaceMissionRepository::class)]
+#[Searchable]
+class SpaceMission implements \Stringable
 {
     use IdTrait;
     use SearchTrait;
-    public const ROCKET_ACTIVE = 'Active';
-    public const ROCKET_RETIRED = 'Retired';
 
-    public const MISSION_FAILURE = 'Failure';
-    public const MISSION_PARTIAL_FAILURE = 'Partial Failure';
-    public const MISSION_PRELAUNCH_FAILURE = 'Prelaunch Failure';
-    public const MISSION_SUCCESS = 'Success';
-
-    public const MISSION_STATUSES = [
-        self::MISSION_FAILURE, self::MISSION_PARTIAL_FAILURE, self::MISSION_PRELAUNCH_FAILURE, self::MISSION_SUCCESS
-    ];
-
-    public const STATUS_COLORS = [
-        self::ROCKET_ACTIVE => 'primary',
-        self::ROCKET_RETIRED => 'danger',
-        self::MISSION_FAILURE => 'danger',
-        self::MISSION_PARTIAL_FAILURE => 'warning',
-        self::MISSION_PRELAUNCH_FAILURE => 'warning',
-        self::MISSION_SUCCESS => 'success',
-    ];
-
-    public static function getIconStatus(string $status): string
-    {
-        return isset(self::STATUS_COLORS[$status])
-            ? sprintf('<i class="mdi mdi-circle text-%s me-1"></i> %s', self::STATUS_COLORS[$status], $status)
-            : $status;
-    }
-
-    /**
-     * @ORM\Column(type="smallint", options={"default": 0})
-     */
-    public int $sequence = 0;
-
-    /**
-     * @ORM\Column(type="string")
-     * @SearchableField
-     */
+    #[ORM\Column(type: Types::STRING)]
+    #[SearchableField]
     public ?string $companyName = null;
 
-    /**
-     * @ORM\Column(type="string")
-     * @SearchableField
-     */
+    #[ORM\Column(type: Types::STRING)]
+    #[SearchableField]
     public ?string $location = null;
 
-    /**
-     * @ORM\Column(type="date")
-     */
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     public ?\DateTimeInterface $date = null;
 
-    /**
-     * @ORM\Column(type="string")
-     * @SearchableField
-     */
+    #[ORM\Column(type: Types::STRING)]
+    #[SearchableField]
     public ?string $detail = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    public string $rocketStatus = self::ROCKET_ACTIVE;
+    #[ORM\Column(type: Types::STRING)]
+    public string $rocketStatus = RocketStatus::ACTIVE;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     public ?int $cost = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    public string $missionStatus = self::MISSION_SUCCESS;
+    #[ORM\Column(type: Types::STRING)]
+    public string $missionStatus = MissionStatus::SUCCESS;
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->detail;
     }

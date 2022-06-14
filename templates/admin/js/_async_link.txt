@@ -1,2 +1,0 @@
-<a data-xhr="..." href>My link</a>
-<form data-xhr="..."></form>

@@ -1,5 +1,5 @@
 <h1 align="center" style="border-bottom: none">
-    ☂ Umbrella Admin Demo
+    <img src="./umbrella.svg" width="25" height="25" alt="Umbrella logo"/> Umbrella Admin Demo
 </h1>
 
 <p align="center">
@@ -8,7 +8,7 @@
 
 <p align="center">
     <a href="https://umbrella-corp.dev"><b>Online demo</b></a> •
-    <a href="https://github.com/acantepie/umbrella/tree/master/docs"><b>Documentation</b></a>
+    <a href="https://acantepie.github.io/umbrella/"><b>Documentation</b></a>
 </p> 
 
 <p align="center">
@@ -19,14 +19,14 @@
 # Install with Docker Compose
 
 ### Technical requirements
-- [docker-compose][docker-compose]
+- [docker-compose](https://docs.docker.com/compose/install/)
 
 ### Installation
 
 ```bash
 # Clone repository
 git clone git@github.com:acantepie/umbrella-admin-demo.git umbrella_demo
-cd umbrella-demo
+cd umbrella_demo
 
 # Build / Up Docker
 docker-compose up -d
@@ -47,7 +47,7 @@ yarn copy-ckeditor
 
 # Prepare database
 php bin/console doctrine:schema:create
-php bin/console doctrine:fixtures:load
+php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 App url : http://127.0.0.1:8080/
@@ -55,12 +55,12 @@ App url : http://127.0.0.1:8080/
 # Install locally
 
 ### Technical requirements
-- PHP 7.4 or higher
+- PHP 8.0 or higher
 - PHP extensions: `json`, `mbstring`, `xml`
-- [composer][get-composer]
-- [Symfony requirements][symfony-req]
-- [Node.js][node-js]
-- [yarn][yarn]
+- [composer](https://getcomposer.org/)
+- [Symfony requirements](https://symfony.com/doc/current/setup.html#technical-requirements)
+- [Node.js](https://nodejs.org/en/download/)
+- [yarn](https://yarnpkg.com/getting-started/install)
 
 ### Installation
 
@@ -82,7 +82,7 @@ yarn copy-ckeditor
 # Prepare database
 php bin/console doctrine:database:create
 php bin/console doctrine:schema:create
-php bin/console doctrine:fixtures:load
+php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 Serve:
@@ -90,9 +90,3 @@ Serve:
 php -S localhost:8000 -t public/
 ```
 App url : http://127.0.0.1:8000/
-
-[docker-compose]: https://docs.docker.com/compose/install/
-[get-composer]: https://getcomposer.org/
-[symfony-req]: https://symfony.com/doc/current/setup.html#technical-requirements
-[node-js]: https://nodejs.org/en/download/
-[yarn]: https://yarnpkg.com/getting-started/install

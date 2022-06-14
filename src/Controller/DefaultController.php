@@ -5,18 +5,12 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Umbrella\CoreBundle\Controller\BaseController;
 
-/**
- * Class DefaultController
- *
- * @Route("/")
- */
+#[Route('/')]
 class DefaultController extends BaseController
 {
-    /**
-     * @Route("")
-     */
+    #[Route('')]
     public function index()
     {
-        return $this->render('landing.html.twig');
+        return $this->redirectToRoute('app_datatable_datatablebasic_index');
     }
 }

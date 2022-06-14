@@ -1,4 +1,3 @@
-const path = require('path');
 const Encore = require('@symfony/webpack-encore');
 
 if (!Encore.isRuntimeEnvironmentConfigured()) {
@@ -9,13 +8,7 @@ Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
 
-    .addAliases({
-        umbrella_core: path.join(__dirname, '/vendor/umbrella2/corebundle/assets/'),
-        umbrella_admin: path.join(__dirname, '/vendor/umbrella2/adminbundle/assets/')
-    })
-
-    .addEntry('front', './assets/front/front.js')
-    .addEntry('admin', './assets/admin/admin.js')
+    .addEntry('admin', './assets/admin/main.js')
     .addEntry('admin_ckeditor', './assets/admin/ckeditor.js')
 
     .enableSassLoader()
